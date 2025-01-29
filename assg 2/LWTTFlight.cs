@@ -22,4 +22,5 @@ class LWTTFlight : Flight
     {
         return $"LWTTFlight - {base.ToString()}, Request Fee: {RequestFee}";
     }
+}
 
