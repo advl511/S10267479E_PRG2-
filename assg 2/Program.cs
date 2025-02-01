@@ -54,6 +54,18 @@ class Program
                 case "2":
                     ListBoardingGates(gates);
                     break;
+                case "3":
+                    break;
+                case "4":
+                    break;
+                case "5":
+                    DisplayFlightDetails(airlines);
+                    break;
+                case "6":
+                    ModifyOrDeleteFlight(airlines);
+                    break;
+                case "7":
+                    break;
                 case "0":
                     Console.WriteLine("Exiting program. Goodbye!");
                     return;
@@ -112,6 +124,24 @@ class Program
         return gates;
     }
 
+    static void ListAllFlights(List<Flight> flights)
+    {
+        Console.WriteLine("\nAll Flights:");
+        foreach (var flight in flights)
+        {
+            Console.WriteLine(flight);
+        }
+    }
+
+    static void ListBoardingGates(List<Gate> gates)
+    {
+        Console.WriteLine("\nBoarding Gates:");
+        foreach (var gate in gates)
+        {
+            Console.WriteLine(gate);
+        }
+    }
+
 
     static void DisplayBoardingGates(List<Gate> gates)
     {
@@ -125,6 +155,85 @@ class Program
             Console.WriteLine($"{gate.GateName,-10} {gate.DDJB,-5} {gate.CFFT,-5} {gate.LWTT,-5}");
         }
     }
+
+    static void DisplayFlightDetails(List<Airline> airlines)
+    {
+        Console.WriteLine("\nAvailable Airlines:");
+        foreach (var airline in airlines)
+        {
+            Console.WriteLine($"{airline.Code} - {airline.Name}");
+        }
+        Console.Write("Enter Airline Code: ");
+        string airlineCode = Console.ReadLine().ToUpper();
+        var selectedAirline = airlines.FirstOrDefault(a => a.Code == airlineCode);
+
+        if (selectedAirline == null)
+        {
+            Console.WriteLine("Invalid airline code.");
+            return;
+        }
+
+        Console.WriteLine("\nFlights for " + selectedAirline.Name + ":");
+        foreach (var flight in selectedAirline.Flights)
+        {
+            Console.WriteLine(value: $"Flight {flight.FlightNumber}: {flight.Origin} -> {flight.Destination}");
+        }
+
+        Console.Write("Enter Flight Number: ");
+        string flightNumber = Console.ReadLine();
+        var selectedFlight = selectedAirline.Flights.FirstOrDefault(f => f.FlightNumber == flightNumber);
+
+        if (selectedFlight == null)
+        {
+            Console.WriteLine("Invalid flight number.");
+            return;
+        }
+
+        Console.WriteLine("\nFlight Details:");
+        Console.WriteLine(selectedFlight);
+    }
+
+    static void ModifyOrDeleteFlight(List<Airline> airlines)
+    {
+        Console.Write("Enter Airline Code: ");
+        string airlineCode = Console.ReadLine().ToUpper();
+        var airline = airlines.FirstOrDefault(a => a.Code == airlineCode);
+        if (airline == null)
+        {
+            Console.WriteLine("Invalid airline code.");
+            return;
+        }
+
+        Console.Write("Enter Flight Number: ");
+        string flightNumber = Console.ReadLine();
+        var flight = airline.Flights.FirstOrDefault(f => f.FlightNumber == flightNumber);
+        if (flight == null)
+        {
+            Console.WriteLine("Invalid flight number.");
+            return;
+        }
+
+        Console.WriteLine("[1] Modify Flight [2] Delete Flight");
+        string choice = Console.ReadLine();
+        if (choice == "1")
+        {
+            Console.Write("Enter new Origin: ");
+            flight.Origin = Console.ReadLine();
+            Console.Write("Enter new Destination: ");
+            flight.Destination = Console.ReadLine();
+            Console.WriteLine("Flight details updated.");
+        }
+        else if (choice == "2")
+        {
+            Console.Write("Confirm delete (Y/N): ");
+            if (Console.ReadLine().ToUpper() == "Y")
+            {
+                airline.Flights.Remove(flight);
+                Console.WriteLine("Flight deleted.");
+            }
+        }
+    }
+
 
 
     static List<Flight> LoadFlights(string filePath, List<Airline> airlines, List<Gate> gates)
