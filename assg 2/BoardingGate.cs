@@ -57,7 +57,7 @@ public class BoardingGate
     }
     public string ToString()
     {
-        return string.Format(null);
+        return string.Format("placeholder");
     }
 
 }

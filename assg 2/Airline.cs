@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//==========================================================
+// Student Number	: S10267479E
+// Student Name	: Tan Si Ming Scott
+// Partner Name	: Lim Hong Sian
+//==========================================================
+
 
 public class Airline
 {
@@ -27,16 +28,25 @@ public class Airline
         set { flights = value; }
     }
 
-    public Airline(string name, string code, Dictionary<string, Flight> flights)
+    public Airline() { }
+    public Airline(string name, string code)
     {
+        Dictionary<string, Flight> flights = new Dictionary<string, Flight>();
+        Flights = flights;
         Name = name;
         Code = code;
-        Flights = flights;
     }
-    public bool AddFlight(Flight)
+    public bool AddFlight(Flight flight)
     {
-        Flights.Add(name, code);
-        return true;
+        if (Flights.ContainsKey(flight.FlightNumber))
+        {
+            return false;
+        }
+        else
+        {
+            Flights.Add(flight.FlightNumber, flight);
+            return true;
+        }
     }
     public double CalculateFees()
     {
@@ -44,15 +54,18 @@ public class Airline
         Console.WriteLine("placeholder");
         return fees;
     }
-    public bool RemoveFlight(Flight)
+    public bool RemoveFlight(Flight flight)
     {
-        Flights.Remove(name);
-        return true;
-    }
-    public override string ToString()
-    {
-        return "Airline; " + Name + "(" + Code + ")";
-    }
+        if (Flights.ContainsKey(flight.FlightNumber))
+        {
+            Flights.Remove(flight.FlightNumber);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
 
+    }
 }

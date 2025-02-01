@@ -10,17 +10,25 @@ class LWTTFlight : Flight
 
     public LWTTFlight(string fn, string o, string des, DateTime et, string s, double requestFee) : base(fn, o, des, et, s)
     {
-        RequestFee = requestFee;
+        requestFee = 500;
     }
 
     public override double CalculateFees()
     {
-        return 500.0 + RequestFee + 500.0;
+        double fees = 0;
+        if (Destination == "Singapore(SIN)")
+        {
+            fees += 500;
+        } else if (Origin == "Singapore(SIN)")
+        {
+            fees += 800;
+        }
+        return RequestFee;
     }
 
     public override string ToString()
     {
-        return $"LWTTFlight - {base.ToString()}, Request Fee: {RequestFee}";
+        return $"LWTTFlight: {base.ToString()}";
     }
 }
 
