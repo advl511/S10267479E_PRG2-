@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public abstract class Flight
+public abstract class Flight:Airline
 {
     public string FlightNumber { get; set; }
     public string Origin { get; set; }

@@ -16,7 +16,16 @@ class DDJBFlight : Flight
 
     public override double CalculateFees()
     {
-        return 500.0 + RequestFee + 300.0;
+        double fees = 0;
+        if (Destination == "Singapore(SIN)")
+        {
+            fees += 500;
+        }
+        else if (Origin == "Singapore(SIN)")
+        {
+            fees += 800;
+        }
+        return fees + RequestFee + 300;
     }
 
     public override string ToString()
