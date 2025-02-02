@@ -57,7 +57,18 @@ public class BoardingGate
     }
     public string ToString()
     {
-        return string.Format("placeholder");
+        string supportedTypes = "";
+        if (SupportsCFFT) supportedTypes += "CFFT, ";
+        if (SupportsDDJB) supportedTypes += "DDJB, ";
+        if (SupportsLWTT) supportedTypes += "LWTT, ";
+
+        // Remove trailing comma and space
+        if (supportedTypes.Length > 0)
+            supportedTypes = supportedTypes.Substring(0, supportedTypes.Length - 2);
+
+        return $"Gate Name: {GateName}\n" +
+               $"Supports Flight Types: {supportedTypes}\n" +
+               $"Assigned Flight: {(Flight != null ? Flight.FlightNumber : "None")}";
     }
 
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-class CFFTFlight : Flight
+public class CFFTFlight : Flight
 {
     public double RequestFee { get; set; }
 

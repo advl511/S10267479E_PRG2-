@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-class DDJBFlight : Flight
+public class DDJBFlight : Flight
 {
     public double RequestFee { get; set; }
 

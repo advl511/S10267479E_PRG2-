@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-class LWTTFlight : Flight
+public class LWTTFlight : Flight
 {
     public double RequestFee { get; set; }
 
