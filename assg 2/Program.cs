@@ -49,22 +49,22 @@ class Program
                     ListAllFlights();
                     break;
                 case "2":
-                    ListBoardingGates();
+                    
                     break;
                 case "3":
                     AssignBoardingGateToFlight();
                     break;
                 case "4":
-                    CreateFlight();
+                    NewFlight();
                     break;
                 case "5":
-                    DisplayFullFlightDetailsFromAirline();
+                    
                     break;
                 case "6":
                     ModifyFlightDetails();
                     break;
                 case "7":
-                    DisplayFlightSchedule();
+                    ListAllFlightschrono();
                     break;
                 case "0":
                     Console.WriteLine("Exiting program. Goodbye!");
@@ -607,18 +607,168 @@ class Program
             Console.WriteLine("No boarding gate assignment found.");
         }
     }
-
-
-    static void DisplayFlightSchedule()
+    static void NewFlight()
     {
-        Console.Clear();
-        Console.WriteLine("Flight Schedule:");
-        foreach (var airline in terminal.Airlines.Values)
+        bool addMoreFlights = true;
+
+        while (addMoreFlights)
         {
-            foreach (var flight in airline.Flights.Values)
+            Console.Clear();
+            Console.WriteLine("Enter the new flight details:");
+
+            // Prompt for flight number
+            Console.Write("Flight Number: ");
+            string flightNumber = Console.ReadLine().Trim();
+
+            // Prompt for origin
+            Console.Write("Origin: ");
+            string origin = Console.ReadLine().Trim();
+
+            // Prompt for destination
+            Console.Write("Destination: ");
+            string destination = Console.ReadLine().Trim();
+
+            // Prompt for expected time (departure/arrival)
+            DateTime expectedTime;
+            while (true)
             {
-                Console.WriteLine($"Flight Number: {flight.FlightNumber}, Airline: {airline.Name}, Origin: {flight.Origin}, Destination: {flight.Destination}, Expected Time: {flight.ExpectedTime}, Status: {flight.Status}");
+                Console.Write("Expected Time (hh:mm tt): ");
+                string expectedTimeStr = Console.ReadLine().Trim();
+
+                if (DateTime.TryParseExact(expectedTimeStr, "h:mm tt",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None, out expectedTime))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid time format. Please try again.");
+                }
             }
+
+            // Ask if there's a special request code
+            Console.Write("Special Request Code (Optional): ");
+            string specialRequestCode = Console.ReadLine().Trim();
+
+            // Create the flight object
+            Flight newFlight = CreateFlightObject(flightNumber, origin, destination, expectedTime, specialRequestCode);
+
+            // Add to the dictionary
+            terminal.Flights.Add(flightNumber, newFlight);
+
+            // Append the new flight to the CSV file
+            AppendFlightToCSV(flightNumber, origin, destination, expectedTime, specialRequestCode);
+
+            // Confirm and ask if the user wants to add another flight
+            Console.Write("\nFlight added successfully. Would you like to add another flight? (Y/N): ");
+            string continueAdding = Console.ReadLine().Trim().ToUpper();
+            if (continueAdding != "Y")
+            {
+                addMoreFlights = false;
+            }
+        }
+
+        Console.WriteLine("\nAll flights have been successfully added.");
+    }
+
+    static Flight CreateFlightObject(string flightNumber, string origin, string destination, DateTime expectedTime, string specialRequestCode)
+    {
+        Flight flight;
+
+        // Create flight object based on special request code
+        switch (specialRequestCode)
+        {
+            case "CFFT":
+                flight = new CFFTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 150);
+                break;
+            case "DDJB":
+                flight = new DDJBFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 300);
+                break;
+            case "LWTT":
+                flight = new LWTTFlight(flightNumber, origin, destination, expectedTime, "Scheduled", 500); // Default request fee
+                break;
+            default:
+                flight = new NORMFlight(flightNumber, origin, destination, expectedTime, "Scheduled");
+                break;
+        }
+
+        return flight;
+    }
+    static void AppendFlightToCSV(string flightNumber, string origin, string destination, DateTime expectedTime, string specialRequestCode)
+    {
+        string filePath = "flights.csv";
+
+        // Prepare the line to append to the file
+        string line = $"{flightNumber},{origin},{destination},{expectedTime.ToString("h:mm tt")},{specialRequestCode}";
+
+        try
+        {
+            // Append the line to the CSV file
+            using (StreamWriter writer = new StreamWriter(filePath, true))
+            {
+                writer.WriteLine(line);
+            }
+            Console.WriteLine($"Flight {flightNumber} added to flights.csv successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error appending to file: {ex.Message}");
+        }
+
+    }
+    static void ListAllFlightschrono()
+    {
+        // Check if there are any flights in the terminal
+        if (terminal.Flights.Count == 0)
+        {
+            Console.WriteLine("No flights available.");
+            return;
+        }
+
+        Console.WriteLine("\nList of Flights (Sorted by Departure Time):");
+        Console.WriteLine("------------------------------------------------------------");
+
+        // Print table header with optimized column widths
+        Console.WriteLine($"{"Flight#",-7}{"Code",-5}{"Airline",-12}{"Origin",-15}{"Dest.",-15}{"Time",-10}{"Status",-10}");
+        Console.WriteLine("------------------------------------------------------------");
+
+        // Create a list from the dictionary and sort it by ExpectedTime (departure time)
+        var sortedFlights = terminal.Flights.Values.OrderBy(f => f.ExpectedTime).ToList();
+
+        // Loop through all flights in the sorted list
+        foreach (var flight in sortedFlights)
+        {
+            // Get airline name from the AirlineCode, based on your previously implemented logic
+            string airlineName = GetAirlineNameFromCode(flight.FlightNumber);
+
+            // Display flight details with optimized spacing and truncated fields
+            Console.WriteLine($"{flight.FlightNumber,-7}" +
+                            $"{flight.FlightNumber.Substring(0, 2),-5}" +  // Airline code (first 2 characters of flight number)
+                            $"{TruncateString(airlineName, 12),-12}" +
+                            $"{TruncateString(flight.Origin, 15),-15}" +
+                            $"{TruncateString(flight.Destination, 15),-15}" +
+                            $"{flight.ExpectedTime.ToString("HH:mm"),-10}" +
+                            $"{flight.Status,-10}");
+        }
+
+        Console.WriteLine("------------------------------------------------------------");
+    }
+    private static string GetAirlineNameFromCode(string flightNumber)
+    {
+        string airlineCode = flightNumber.Substring(0, 2); // Assuming the first 2 characters are the airline code
+
+        switch (airlineCode)
+        {
+            case "SQ": return "Singapore Airlines";
+            case "MH": return "Malaysia Airlines";
+            case "JL": return "Japan Airlines";
+            case "CX": return "Cathay Pacific";
+            case "QF": return "Qantas Airways";
+            case "TR": return "AirAsia";
+            case "EK": return "Emirates";
+            case "BA": return "British Airways";
+            default: return "Unknown Airline";
         }
     }
 }

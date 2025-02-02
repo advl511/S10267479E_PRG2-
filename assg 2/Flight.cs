@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public abstract class Flight
+public abstract class Flight : IComparable<Flight>
 {
     public string FlightNumber { get; set; }
     public string Origin { get; set; }
@@ -27,10 +27,18 @@ public abstract class Flight
 
     public override string ToString()
     {
-        return $"Flight: {base.ToString()}";
+        return $"Flight Number: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected Time: {ExpectedTime}, Status: {Status}";
     }
-    
-   
+    public int CompareTo(Flight other)
+    {
+        if (other == null)
+        {
+            return 1;
+        }
+        return this.ExpectedTime.CompareTo(other.ExpectedTime);
+    }
+
+
 }
 
 
