@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-public class Terminal: Airline
+public class Terminal
 {
     private string terminalName;
     public string TerminalName

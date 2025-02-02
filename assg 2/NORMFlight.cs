@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class NORMFlight : Flight
+class NORMFlight : Flight
 {
     public NORMFlight(string fn, string o, string des, DateTime et, string s) : base(fn, o, des, et, s) { }
 
