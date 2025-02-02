@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-class LWTTFlight : Flight
+public class LWTTFlight : Flight
 {
     public double RequestFee { get; set; }
 
     public LWTTFlight(string fn, string o, string des, DateTime et, string s, double requestFee) : base(fn, o, des, et, s)
     {
-        requestFee = 500;
+        RequestFee = requestFee;
     }
 
     public override double CalculateFees()
@@ -23,7 +23,7 @@ class LWTTFlight : Flight
         {
             fees += 800;
         }
-        return RequestFee;
+        return fees + RequestFee +300;
     }
 
     public override string ToString()
