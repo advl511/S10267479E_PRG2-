@@ -210,6 +210,112 @@ class Program
         };
     }
 
+    static void ListBoardingGates()
+    {
+        Console.Clear();
+        Console.WriteLine("===============================================");
+        Console.WriteLine("List of Boarding Gates for Changi Airport Terminal 5");
+        Console.WriteLine("===============================================");
+        Console.WriteLine("\nGate\tDDJB\tCFFT\tLWTT");
+
+        try
+        {
+            string[] lines = File.ReadAllLines(BoardingGatesFilePath);
+            // Skip header row
+            for (int i = 1; i < lines.Length; i++)
+            {
+                string[] values = lines[i].Split(',');
+                if (values.Length >= 4)
+                {
+                    string gateName = values[0].Trim();
+                    string ddjb = values[1].Trim();
+                    string cfft = values[2].Trim();
+                    string lwtt = values[3].Trim();
+                    Console.WriteLine($"{gateName,-8}{ddjb,-8}{cfft,-8}{lwtt}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+
+    static void DisplayFullFlightDetailsFromAirline(Dictionary<string, Airline> airlines, Dictionary<string, Flight> flights)
+    {
+        // Display the list of airlines.
+        Console.WriteLine("=============================================");
+        Console.WriteLine("List of Airlines for Changi Airport Terminal 5");
+        Console.WriteLine("=============================================");
+        Console.WriteLine("Airline Code    Airline Name");
+
+        foreach (Airline airline in airlines.Values)
+        {
+            Console.WriteLine($"{airline.Code,-15}{airline.Name}");
+        }
+
+        // Prompt the user for an airline code.
+        Console.Write("\nEnter Airline Code: ");
+        string selectedCode = Console.ReadLine().Trim().ToUpper();
+
+        if (airlines.ContainsKey(selectedCode))
+        {
+            Airline selectedAirline = airlines[selectedCode];
+            Console.WriteLine("=============================================");
+            Console.WriteLine($"List of Flights for {selectedAirline.Name}");
+            Console.WriteLine("=============================================");
+            Console.WriteLine("Flight Number   Airline Name           Origin                 Destination            Expected Departure/Arrival Time");
+
+            bool flightFound = false;
+            // Iterate over all flights in the flights dictionary.
+            foreach (Flight flight in flights.Values)
+            {
+                // Here we use the flight number's prefix as a heuristic to match the airline code.
+                if (flight.FlightNumber.StartsWith(selectedCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine(flight.ToString());
+                    flightFound = true;
+                }
+            }
+
+            if (!flightFound)
+            {
+                Console.WriteLine("No flights available for this airline.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Airline code not found.");
+        }
+    }
+
+
+
+    static string GetAirportCode(string city)
+    {
+        Dictionary<string, string> airportCodes = new Dictionary<string, string>
+    {
+        {"Singapore", "SIN"},
+        {"Tokyo", "NRT"},
+        {"Manila", "MNL"},
+        {"Sydney", "SYD"},
+        {"Dubai", "DXB"},
+        // Add more airport codes as needed
+    };
+
+        foreach (var airport in airportCodes)
+        {
+            if (city.Contains(airport.Key, StringComparison.OrdinalIgnoreCase))
+            {
+                return airport.Value;
+            }
+        }
+        return city.Substring(0, Math.Min(3, city.Length)).ToUpper();
+    }
+
+
+
+
     static void ModifyFlightDetails()
     {
         Console.Clear();
