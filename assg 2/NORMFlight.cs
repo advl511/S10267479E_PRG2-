@@ -11,12 +11,12 @@ class NORMFlight : Flight
 
     public override double CalculateFees()
     {
-        return 500.0; // Base fee for normal flights
+        return 500.0; 
     }
 
     public override string ToString()
     {
-        return $"NORMFlight - {base.ToString()}";
+        return $"NORMFlight: {base.ToString()}";
     }
 }
 

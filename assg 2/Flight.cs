@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-abstract class Flight
+public abstract class Flight
 {
     public string FlightNumber { get; set; }
     public string Origin { get; set; }
@@ -13,7 +13,6 @@ abstract class Flight
     public DateTime ExpectedTime { get; set; }
     public string Status { get; set; }
 
-    public Flight() { }
 
     public Flight(string fn, string o, string des, DateTime et, string s)
     {
@@ -28,8 +27,10 @@ abstract class Flight
 
     public override string ToString()
     {
-        return $"Flight Number: {FlightNumber}, Origin: {Origin}, Destination: {Destination}, Expected Time: {ExpectedTime}, Status: {Status}";
+        return $"Flight: {base.ToString()}";
     }
+    
+   
 }
 
 
