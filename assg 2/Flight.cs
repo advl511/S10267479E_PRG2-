@@ -13,7 +13,6 @@ public abstract class Flight
     public DateTime ExpectedTime { get; set; }
     public string Status { get; set; }
 
-=
 
     public Flight(string fn, string o, string des, DateTime et, string s)
     {

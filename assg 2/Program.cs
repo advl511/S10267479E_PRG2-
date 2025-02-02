@@ -4,7 +4,9 @@
 // Partner Name	: Lim Hong Sian
 //==========================================================
 
-
+class Program
+{
+    static Terminal terminal = new Terminal("Terminal 5");
     static void Main(string[] args)
     {
 
@@ -28,7 +30,6 @@
             switch (choice)
             {
                 case "1":
-                new Airline(
 
                     break;
                 case "2":
@@ -44,7 +45,7 @@
             Console.WriteLine("\nPress any key to continue...");
             Console.ReadKey();
         }
-        
-    }
 
+    }
+}
 
